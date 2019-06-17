@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<CUSTOM_OBJECT>
+  <NAME>0^PO_CHECK_AUTH_MATRIX^PurchaseOrderLineNopart</NAME>
+  <TYPE>CUSTOM_EVENT_ACTION</TYPE>
+  <DESCRIPTION>.</DESCRIPTION>
+  <CUSTOM_EVENT_ACTION EXPORT_DEF_VERSION="1">
+    <EVENT_LU_NAME>PurchaseOrderLineNopart</EVENT_LU_NAME>
+    <EVENT_ID>PO_CHECK_AUTH_MATRIX</EVENT_ID>
+    <ACTION_NUMBER>0</ACTION_NUMBER>
+    <ACTION_ENABLE>TRUE</ACTION_ENABLE>
+    <ACTION_PARAMETERS>!FNDSER.EVENT_ACTION_PARAM
+$SQL=
+-Declare
+-
+-cont_ number;
+-po_no_ varchar(50);
+-
+-Cursor get_order_approver is
+-   select count(order_no)
+-   from PURCHASE_ORDER_APPROVAL_tab
+-   where order_no=po_no_ and chg_order_no=&apos;*&apos;; 
+-
+-
+-Begin
+-
+-Language_SYS.Set_Language(&apos;en&apos;);
+-
+-if ( &apos;&amp;NEW:ROWSTATE&apos; = &apos;Released&apos; ) or ( &apos;&amp;NEW:ROWSTATE&apos; = &apos;Confirmed&apos; ) then
+-
+-
+-po_no_ := &apos;&amp;NEW:ORDER_NO&apos;;
+-cont_ := 0;
+-
+-open get_order_approver;
+-fetch get_order_approver into cont_;
+-close get_order_approver;
+-
+-if cont_ = 0 then
+-
+-    error_sys.Record_General(&apos;Error:  &apos;,&apos;Authorization Matrix error, please contact OLA Support&apos;);
+-end if;
+-
+-End if;
+-End;
+</ACTION_PARAMETERS>
+    <FND_EVENT_ACTION_TYPE_DB>EXECUTEONLINESQL</FND_EVENT_ACTION_TYPE_DB>
+    <CONDITION_TYPE>!EVENT_ACTION_COND_TYPE
+$OLD:ORDER_NO=
+$OLD:ROWSTATE=
+$NEW:ORDER_NO=
+$NEW:ROWSTATE=</CONDITION_TYPE>
+    <CONDITION_VALUE>!EVENT_ACTION_COND_VALUE
+$OLD:ORDER_NO=
+$OLD:ROWSTATE=
+$NEW:ORDER_NO=
+$NEW:ROWSTATE=</CONDITION_VALUE>
+    <DESCRIPTION>.</DESCRIPTION>
+    <SUBSCRIBABLE>FALSE</SUBSCRIBABLE>
+    <ROLE/>
+    <DEFINITION_MODIFIED_DATE>2019-06-07-14.38.10</DEFINITION_MODIFIED_DATE>
+    <OBJKEY>FA32B7DA36B944E9AF1B8C4910EEE171</OBJKEY>
+  </CUSTOM_EVENT_ACTION>
+</CUSTOM_OBJECT>
