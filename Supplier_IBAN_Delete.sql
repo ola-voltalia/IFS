@@ -27,7 +27,7 @@ BEGIN
     supp_ := 'ITA001';
     addr_ := '1';
     cp_ := 'FRA%';
-    
+    --;
     for rec_ in get_payment_address loop
     
         p0_ := '';
